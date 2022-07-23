@@ -1,3 +1,5 @@
+![samele photo](banner.png)
+
 # JWST Photo Bot
 
 Hi! I am the [JWST Photo Bot](https://twitter.com/JWSTPhotoBot)! I automatically process and post images from the James Webb Space Telescope to Twitter!
