@@ -20,3 +20,17 @@ A: Typically, when you see images from JWST, Hubble, or any other space telescop
 
 ### Q: What are NIRCAM and MIRI?
 A: Think of them as the JWST's different cameras. NIRCAM (Near InfraRed CAMera) captures wavelengths of light between 0.6 and 5 μm (micrometers), while MIRI (Mid InfraRed Instrument) captures longer wavelengths of light between 4.9 and 28.8 μm. The JWST has two other instruments (NIRISS and NIRSpec), but these are designed for spectography, so photos made with their data are more confusing and less appealing to the public.
+
+## Technical Information
+
+### MAST Database
+This bot gets its data from the [MAST Portal](https://mast.stsci.edu/portal/Mashup/Clients/Mast/Portal.html) (Barbara A. Mikulski Archive for Space Telescopes). Specifically, it asks for stage-3 calibrated public data from JWST's MIRI and NIRCAM instruments (I2D .fits files). It tries to post its photos in chronological order of time captured, but MAST isn't always updated chronologically, so out-of-order images will still appear sometimes. However, this bot will not post images that are more than a month (30 days) old.
+
+### Image Processing
+I use a two-pronged approach here.
+
+First, I compute the .fits array's histograms and clip the top 0.2% and bottom 0.98% of the values. I histogram-equalize the resulting array (10,000 bins) and transform it by `f(x) = (x^4 + x^8 + x^16) / 3.0`. This essentially matches the photo's histogram to the ideal "space photo" histogram -- mostly dark, with some bright spots, and some REALLY bright spots. However, the equalization can sometimes introduce additional noise, and the power transformation can hide interesting darker parts of the image (like large gas clouds).
+
+Second, I take the .fits array's histogram and rescale the data's (3rd percentile, 98th percentile) to the (0.0, 1.0) range. Then I apply a sigmoid that remaps the outliers to (0, 1): `f(x) = 0.5 + (2x - 2) / (2*sqrt((2x - 2)^2 + 1.0))`. This provides a nice pseudo-linear remapping that still (technically) captures the full range of the data.
+
+I average these two values to get the final photo. Both of these functions are monotonic and remap the full value range to (0.0, 1.0). Realistically, a ton of this detail is lost when the floating-point values are converted to bytes in the .png, but most of the data is recoverable before this point.
