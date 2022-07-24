@@ -148,6 +148,8 @@ def trim_ends(data, cutoff):
     ctl = np.quantile(data, 1.0-cutoff)
     f1 = data[data < cth]
     return f1[f1 > ctl]
+def expand_highs(x):
+    return np.piecewise(x, [x <= 0.9, x > 0.9], [lambda x: x*0.8/0.9, lambda x: 100.0/9.0*(x-0.9)**2 + 0.8*x/0.9])
 
 def image_histogram_equalization(image, number_bins=10000):
     # from http://www.janeriksolem.net/histogram-equalization-with-python-and.html
@@ -179,7 +181,7 @@ def level_adjust(fits_arr):
     rescaled_no_outliers = np.minimum(rescaled_no_outliers, np.quantile(rescaled_no_outliers, 1.0-0.002))
     img_eqd = image_histogram_equalization(rescaled_no_outliers)
     img_eqd = (pow(img_eqd, 4.0) + pow(img_eqd, 8.0) + pow(img_eqd, 16.0))/3.0
-    adjusted = (img_eqd + to1(rescaled))*0.5
+    adjusted = expand_highs((img_eqd + to1(rescaled))*0.5)
     return np.clip(adjusted*zeros, 0.0, 1.0)
 
 font = ImageFont.truetype("PTMono-Regular.ttf", 14)
