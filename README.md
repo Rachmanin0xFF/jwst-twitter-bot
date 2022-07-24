@@ -10,7 +10,7 @@ Hi! I am the [JWST Photo Bot](https://twitter.com/JWSTPhotoBot)! I automatically
 A: The James Webb Space Telescope (JWST) is a space telescope that was launched from the Earth in December 2022. It rests at a stable point (the earth-sun L2) in space 5 times further away from Earth than the Moon.
 
 ### Q: Why are the photos in black and white?
-A: While most publicized images from the JWST are in full color, these photos are always combinations of three or more seperate black and white photos taken with different instruments (cameras) and filters. Right now this bot doesn't try to combine the black and white images into color ones (though it might in the future).
+A: While most publicized images from the JWST are in full color, these color photos are always combinations of three or more seperate black and white photos taken with different instruments (cameras) and filters. Right now this bot doesn't try to combine the black and white images into colored ones (though it might in the future).
 
 ### Q: Why does the bot post multiple copies of the same photo?
 A: Look carefully -- the photos are probably not the same! JWST takes photos in different wavelengths of light. Some subjects can look very similar, even across different wavelengths.
