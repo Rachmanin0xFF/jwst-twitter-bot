@@ -19,7 +19,7 @@ A: Look carefully -- the photos are probably not the same! JWST takes photos in 
 A: Typically, when you see images from JWST, Hubble, or any other space telescope, they have been carefully edited and fine-tuned **by hand**. JWST does not provide data in a format that can be immediately displayed on a computer monitor, and squishing it down to a computer screen without losing detail is a nontrivial task. The solution I use here is usually decent, but it has some flaws.
 
 ### Q: What are NIRCAM and MIRI?
-A: Think of them as the JWST's different cameras. NIRCAM (Near InfraRed CAMera) captures wavelengths of light between 0.6 and 5 μm (micrometers), while MIRI (Mid InfraRed Instrument) captures longer wavelengths of light between 4.9 and 28.8 μm. The JWST has two other instruments (NIRISS and NIRSpec), but these are designed for spectography, so photos made with their data are more confusing and less appealing to the public.
+A: Think of them as the JWST's different cameras. NIRCAM (Near InfraRed CAMera) captures wavelengths of light between 0.6 and 5 μm (micrometers), while MIRI (Mid InfraRed Instrument) captures longer wavelengths of light between 4.9 and 28.8 μm. The JWST has two other instruments (NIRISS and NIRSpec), but these are designed for spectroscopy, so photos made with their data are more confusing and less appealing to the public.
 
 ## Technical Information
 
