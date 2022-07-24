@@ -45,7 +45,7 @@ I also experimented with rescaling based off of simple statistical parameters (v
 * Observation Start Time: The time when the whole observation began; NOT necessarily the time that the photo was taken.
 * Exposure Time: The amount time that the JWST was collecting light from the sky (shutter speed).
 * Instrument: Should be either NIRCAM or MIRI
-* Filter: The range of wavelengths captured in the image (descriptions [here](https://jwst-docs.stsci.edu/jwst-near-infrared-camera/nircam-instrumentation/nircam-filters)
+* Filter: The range of wavelengths captured in the image (descriptions [here](https://jwst-docs.stsci.edu/jwst-near-infrared-camera/nircam-instrumentation/nircam-filters))
 * Proposal ID: The I.D. number of the proposal that reserved the time to take this photo (can be used when querying the MAST database).
 * P.I.: The principal investigator of the proposal that initiated this observation.
 * ObjID: The ID number of this particular object in the MAST database.
