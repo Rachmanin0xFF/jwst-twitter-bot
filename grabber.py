@@ -1,3 +1,9 @@
+# Sorry to anyone reading this; I haven't had the time to clean up and comment this code yet.
+# I'll move this all to GCP or something eventually, but right now it's just running on my home desktop.
+# Need to figure out how to make it use less RAM... requires at least 16GB to run right now!
+
+# (some of these arrays are >6GB)
+
 from astropy.io import fits
 from astroquery.mast import Observations
 import astroquery.exceptions
