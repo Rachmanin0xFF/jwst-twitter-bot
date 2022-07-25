@@ -70,7 +70,7 @@ access_token_secret = config['twitter']['access_token_secret']
 
 auth=tweepy.OAuthHandler(consumer_key,consumer_key_secret)
 auth.set_access_token(access_token,access_token_secret)
-api=tweepy.API(auth)
+api=tweepy.API(auth, wait_on_rate_limit=True, wait_on_rate_limit_notify=True) # USE TWEEPY'S RATE LIMIT!
 
 def post_images(paths, description="test image"):
     media_ids = []
