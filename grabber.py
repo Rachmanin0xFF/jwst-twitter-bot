@@ -83,6 +83,7 @@ def post_images(paths, description="test image"):
     print_info("Posted status, output follows:")
     print_info(str(status))
     time.sleep(40) # WAIT FORTY SECONDS TO ENSURE WE DON'T EXCEED TWITTER'S 300 POST / 3HRS MAXIMUM
+                   # This code is (and will remain) single-threaded, so I don't have to worry about overlapping calls.
 
 #============================ MAST Download ============================#
 
