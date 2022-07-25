@@ -29,7 +29,7 @@ I get my data from the [MAST Portal](https://mast.stsci.edu/portal/Mashup/Client
 I use [AstroQuery](https://astroquery.readthedocs.io/en/latest/) to grab the files off of MAST.
 
 ### Image Processing
-I use a two-pronged approach here.
+I use a two-pronged approach here, prioritizing aesthetics over any sort of scientific value.
 
 First, I compute the .fits array's histograms (I use [AstroPy](https://www.astropy.org/) to load .fits files) and clip the top 0.2% and bottom 0.98% of the values. I histogram-equalize the resulting array (10,000 bins) and transform it by `f(x) = (x^4 + x^8 + x^16) / 3.0`. This essentially matches the photo's histogram to the ideal "space photo" histogram -- mostly dark, with some bright spots, and some REALLY bright spots. However, the equalization can sometimes introduce additional noise, and the power transformation can hide interesting darker parts of the image (like large gas clouds).
 
