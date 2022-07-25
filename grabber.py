@@ -151,6 +151,7 @@ def trim_ends(data, cutoff):
 def expand_highs(x):
     return np.piecewise(x, [x <= 0.9, x > 0.9], [lambda x: x*0.8/0.9, lambda x: 100.0/9.0*(x-0.9)**2 + 0.8*x/0.9])
 
+
 def image_histogram_equalization(image, number_bins=10000):
     # from http://www.janeriksolem.net/histogram-equalization-with-python-and.html
 
@@ -194,12 +195,15 @@ def add_text(path_in, path_out, text):
     with Image.open(path_in) as img_in:
         drawt = ImageDraw.Draw(img_in)
         txw = drawt.textbbox((5, 5), text, font=font)[2] + 5 # x0 y0 x1 y1
-        new_size = (max(img_in.size[0], txw), np.round(img_in.size[1]+140).astype(np.int64))
+        new_size = (max(img_in.size[0], txw), np.round(img_in.size[1]+160).astype(np.int64))
         img_out = Image.new(mode="L", size=new_size, color=(0))
         img_out.paste(img_in, (0, 0))
         draw = ImageDraw.Draw(img_out)
         draw.text((5, img_in.size[1] + 5),text,(255),font=font)
         img_out.save(path_out)
+
+def trim_str(s, l):
+    return (s[:l-3] + '...') if len(s) > l else s
 
 # scales to a set number of bytes
 def scale_image_to_size(path, path_out, max_size_b, iterations):
@@ -265,15 +269,17 @@ class JWSTPhoto:
         self.mjd_start = self.obj_data["t_min"]
         tnm = "Target: " + self.target_name + "\n"
         if "UNKNOWN" in self.target_name.upper():
-            tnm = "Observation Title: " + self.obs_title + "\n"
+            tnm = ""
         self.label = str("Target: " + self.target_name + "\n" + 
                          "Observation Title: " + self.obs_title + "\n" +
                          "Observation (ra, dec): (" + '{:.5f}'.format(self.s_ra) + u"\N{DEGREE SIGN}, " + '{:.5f}'.format(self.s_dec) + u"\N{DEGREE SIGN})\n" +
                          "Observation Start Time: " + self.start_time + "\n" +
                          "Exposure Time: " + self.exposure_time_formatted + "\n"
                          "Instrument / Filter: " + self.instrument_name + " / " + self.filters + "\n" +
-                         "Proposal I.D. / P.I.: " + str(self.proposal_id) + " / " + self.proposal_pi)
+                         "Proposal I.D. / P.I.: " + str(self.proposal_id) + " / " + self.proposal_pi + "\n" +
+                         "ObjID: " + str(self.obj_id))
         self.caption = str(tnm + 
+                           "Observation Title: " + trim_str(self.obs_title, 80) + "\n" +
                            "Instrument: " + self.instrument_name + "\n" + 
                            "Filter: " + self.filters + "\n" +
                            "Observation Start Time: " + self.start_time + "\n" +
@@ -297,9 +303,16 @@ class JWSTPhoto:
                 break
             except OSError:
                 print_info("File corrupted/incomplete/empty. Redownloading...")
-                self.path = str(pathlib.Path(__file__).parent.resolve()) + "\\" + download(self.product)["Local Path"][0][2:]
-                os.remove(self.path)
+                dl = download(self.product)
+                if "error" in dl["Status"][0].lower():
+                    print("ERROR DOWNLOADING .FITS FILE!!! SKIPPING!!!")
+                    self.obj_id = -1
+                    return None
+                self.path = str(pathlib.Path(__file__).parent.resolve()) + "\\" + dl["Local Path"][0][2:]
+                if os.path.exists(self.path):
+                    os.remove(self.path)
                 download(self.product)
+                time.sleep(0.1)
         self.pngpath = self.path.split(".")[0] + ".png"
         self.pngscaledpath = self.path.split(".")[0] + "_scaled.png"
         self.pngscaledtextpath = self.path.split(".")[0] + "_scaled_text.png"
@@ -348,9 +361,10 @@ def process_range(start_t, end_t):
         save_set(posted_images, "posted_images.dat")
 
 ctime = Time.now().mjd
+ctime = 59940.0
 # process_range(ctime - 1000.0, ctime)
 for i in range(250, -1, -1):
-    process_range(ctime - i*1.0 - 1.5, ctime - i*1.0)
+    process_range(ctime - i*1.0 - 1.1, ctime - i*1.0)
     print("RANG " + str(i))
 
 #while True:
