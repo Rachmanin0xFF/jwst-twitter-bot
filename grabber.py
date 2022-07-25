@@ -76,8 +76,7 @@ def post_images(paths, description="test image"):
     status = api.update_status(status=description, media_ids=media_ids)
     print_info("Posted status, output follows:")
     print_info(str(status))
-    time.sleep(10) # WAIT TEN SECONDS TO ENSURE WE DON'T EXCEED TWITTER'S 200 POST / 15 MINUTES MAXIMUM
-                   # (we actually only need to wait 4.5s, but I bump it up just to be safe)
+    time.sleep(40) # WAIT FORTY SECONDS TO ENSURE WE DON'T EXCEED TWITTER'S 300 POST / 3HRS MAXIMUM
 
 #============================ MAST Download ============================#
 
