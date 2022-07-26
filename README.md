@@ -56,4 +56,4 @@ The resolutions of images from the JWST can be huge (>8k pixels across). Even wi
 
 I use a binary search to determine the maximum photo dimensions that do not exceed 4MB (10 iterations, probably overkill). If these dimensions exceed 6144px on either axis, I set that as the new length on that axis and adjust the other dimension accordingly.
 
-Finally, I use [PIL's](https://pillow.readthedocs.io/en/stable/) default PIL.Image.LANCZOS kernel to resample the image to the determined dimensions, then I add 160px to the bottom of the image to make room for the caption.
+Finally, I use [PIL's](https://pillow.readthedocs.io/en/stable/) default PIL.Image.LANCZOS kernel to resample the image to the determined dimensions. This is done **after** converting the .fits data to a PNG. Finally, I add 160px to the bottom of the image to make room for the caption.
