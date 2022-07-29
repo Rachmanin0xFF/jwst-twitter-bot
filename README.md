@@ -7,19 +7,22 @@ Hi! I am the [JWST Photo Bot](https://twitter.com/JWSTPhotoBot)! I automatically
 ## Basic Q & A
 
 ### Q: What is the JWST?
-A: The James Webb Space Telescope (JWST) is a space telescope that was launched from the Earth in December 2022. It rests at a stable point (the earth-sun L2) in space 5 times further away from Earth than the Moon.
+A: The James Webb Space Telescope (JWST) is a space telescope that was launched from the Earth in December 2022. It rests at a stable-ish point (the earth-sun L2) in space 5 times further away from Earth than the Moon.
 
 ### Q: Why are the photos in black and white?
-A: While most publicized images from the JWST are in full color, these color photos are always combinations of three or more separate black and white photos taken with different instruments (cameras) and filters. Right now this bot doesn't try to combine the black and white images into colored ones (though it might in the future).
+A: While most publicized images from the JWST are in full color, these color photos are always combinations of three or more separate black and white photos taken with different instruments (cameras) or filters. Right now this bot doesn't try to combine the black and white images into colored ones (though it might in the future). Also, color photos take up 3 times as much space as greyscale ones, so I'd have to to post them in lower quality, because Twitter does not let you upload photos that take up lots of memory.
 
 ### Q: Why does the bot post multiple copies of the same photo?
-A: Look carefully -- the photos are probably not the same! JWST takes photos in different wavelengths of light. Some subjects can look very similar, even across different wavelengths.
+A: Look carefully -- the photos are probably not the same! JWST takes photos in different wavelengths of light (wavelength bands, actually). Some subjects can look very similar in different wavelengths, others not so much. For example, a red class-M star will appear brighter in the red wavelength (650nm), while a blue class-O star might appear brighter in the will wavelength (470nm). If two photos look very similar, it just means that the distribution of light in each wavelength is very similar. The number in the "filter" section of each post roughly indicates the wavelength (in nanometers) of light that photo is looking at.
 
 ### Q: These photos look bad / noisy / overexposed!
 A: Typically, when you see images from JWST, Hubble, or any other space telescope, they have been carefully edited and fine-tuned **by hand**. JWST does not provide data in a format that can be immediately displayed on a computer monitor, and squishing it down to a computer screen without losing detail is a nontrivial task. The solution I use here is usually decent, but it has some flaws.
 
 ### Q: What are NIRCAM and MIRI?
 A: Think of them as the JWST's different cameras. NIRCAM (Near InfraRed CAMera) captures wavelengths of light between 0.6 and 5 μm (micrometers), while MIRI (Mid InfraRed Instrument) captures longer wavelengths of light between 4.9 and 28.8 μm. The JWST has two other instruments (NIRISS and NIRSpec), but these are designed for spectroscopy, so photos made with their data are more confusing and less appealing to the public.
+
+### Q: Why did you make this?
+A: While JWST's data is publicly available, it is not really accessible to the *public*. It is very difficult for a layperson with no science or programming background to download and view data from the MAST database. I thought I'd try to bridge the gap and make it easier for the average person to see a fraction of the data JWST is sending back to Earth.
 
 ## Technical Information
 
@@ -33,13 +36,13 @@ I use a two-pronged approach here, prioritizing aesthetics over any sort of scie
 
 First, I compute the .fits array's histograms (I use [AstroPy](https://www.astropy.org/) to load .fits files) and clip the top 0.2% and bottom 0.98% of the values. I histogram-equalize the resulting array (10,000 bins) and transform it by `f(x) = (x^4 + x^8 + x^16) / 3.0`. This essentially matches the photo's histogram to the ideal "space photo" histogram -- mostly dark, with some bright spots, and some REALLY bright spots. However, the equalization can sometimes introduce additional noise, and the power transformation can hide interesting darker parts of the image (like large gas clouds).
 
-Second, I take the .fits array's histogram and rescale the data's (3rd percentile, 98th percentile) to the (0.0, 1.0) range. Then I apply a sigmoid that keeps the outliers in the (0, 1) range: `f(x) = 0.5 + (2x - 2) / (2*sqrt((2x - 2)^2 + 1.0))`. This provides a nice pseudo-linear remapping that still (technically) captures the full range of the data. I don't bother gamma-correcting the levels because the sigmoid sort of handles that.
+Second, I take the .fits array's histogram and rescale the data's (3rd percentile, 98th percentile) to the (0.0, 1.0) range. Then I apply a sigmoid that keeps the outliers in the (0, 1) range: `f(x) = 0.5 + (2x - 2) / (2*sqrt((2x - 2)^2 + 1.0))`. This provides a nice pseudo-linear remapping that still captures the full range of the data.
 
-I average these two values, then apply a final slight adjustment where I clamp the values to (0.0, 1.0) and expand the levels in the (0.9, 1.0) region: `f(x) = {if x <= 0.9: x*0.8/0.9, if x > 0.9: 100.0/9.0*(x - 0.9)^2 + 0.8*x/0.9}`. All of the functions are monotonic and (mostly) remap the full value range to (0.0, 1.0). Realistically, a ton of this detail is lost when the 64 bit floating-point values are converted to bytes in the .png, but this process guarantees that no hard clipping occurs anywhere in the photo.
+I average these two values, then apply a final slight adjustment where I clamp the values to (0.0, 1.0) and expand the levels in the (0.9, 1.0) region: `f(x) = {if x <= 0.9: x*0.8/0.9, if x > 0.9: 100.0/9.0*(x - 0.9)^2 + 0.8*x/0.9}`. All of the functions are monotonic and (mostly) remap the full value range to (0.0, 1.0).  Realistically, a ton of this detail is lost when the 64 bit floating-point values are converted to bytes in the .png, but this process guarantees that no hard clipping occurs anywhere in the photo. Additionally, I don't bother gamma-correcting the levels because: 1. the sigmoid in the second step acts as a pseudo gamma correction, and 2. I am aiming for aesthetics and detail preservation, and in this case gamma correction does not help either of these factors.
 
 I also experimented with rescaling based off of simple statistical parameters (variance, median, AAD/MAD, etc.) and other sigmoid functions, but finally settled on the approach above.
 
-There is no dithering right now (most of the photos are noisy enough already). I may add some blue noise in the future, but it is not a priority.
+There is no dithering in the bit reduction step right now. Most of the photos are noisy enough already without it. I may add some blue noise in the future, but it is not a priority.
 
 ### Image Field Descriptions
 * Target: The name of the astronomical subject of the photo (UNKNOWN if there is no specific target).
