@@ -43,7 +43,7 @@ Second, I take the .fits array's histogram and rescale the data's (3rd percentil
 
 I average these two values, then apply a final slight adjustment where I clamp the values to (0.0, 1.0) and expand the levels in the (0.9, 1.0) region: `f(x) = {if x <= 0.9: x*0.8/0.9, if x > 0.9: 100.0/9.0*(x - 0.9)^2 + 0.8*x/0.9}`. All of the functions are monotonic and (mostly) remap the full value range to (0.0, 1.0).  Realistically, a ton of this detail is lost when the 64 bit floating-point values are converted to bytes in the .png, but this process guarantees that no hard clipping occurs anywhere in the photo. Additionally, I don't bother gamma-correcting the levels because: 1. the sigmoid in the second step acts as a pseudo gamma correction, and 2. I am aiming for aesthetics and detail preservation, and in this case gamma correction does not help either of these factors.
 
-I also experimented with rescaling based off of simple statistical parameters (variance, median, AAD/MAD, etc.) and other sigmoid functions, but finally settled on the approach above.
+I also experimented with rescaling based off of simple statistical measures (variance, median, AAD/MAD, etc.) and other sigmoid functions, but finally settled on the approach above.
 
 There is no dithering in the bit reduction step right now. Most of the photos are noisy enough already without it. I may add some blue noise in the future, but it is not a priority.
 
