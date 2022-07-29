@@ -368,14 +368,10 @@ def process_range(start_t, end_t):
         posted_images.add(pic.obj_id)
         save_set(posted_images, "posted_images.dat")
 
-ctime = Time.now().mjd
-ctime = 59940.0
-# process_range(ctime - 1000.0, ctime)
-for i in range(250, -1, -1):
-    process_range(ctime - i*1.0 - 1.1, ctime - i*1.0)
-    print("RANG " + str(i))
-
-#while True:
-#    time.sleep(60*20)
-#    ctime = Time.now().mjd
-#    process_range(ctime - 0.5, ctime)
+while True:
+    ctime = Time.now().mjd
+    for i in range(30, -1, -1):
+        process_range(ctime - i*1.0 - 1.1, ctime - i*1.0)
+        print("RANG " + str(i))
+        time.sleep(2.0)
+    time.sleep(30.0*60.0)
