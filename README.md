@@ -35,7 +35,7 @@ I get my data from the [MAST Portal](https://mast.stsci.edu/portal/Mashup/Client
 I use [AstroQuery](https://astroquery.readthedocs.io/en/latest/) to grab the files off of MAST.
 
 ### Image Processing
-I use a two-pronged approach here, prioritizing aesthetics over any sort of scientific value.
+To display the data from the JWST on standard computer monitors, the .fits files need to be tone mapped to an 8-bit monochromatic color space. The shape and range of the value distribution can vary wildly across different JWST photos, so any trivial fixed formula won't work well. I eyeballed the following tone mapping procedure, mostly using photos of nebulae as a reference to adjust the technique (they look the coolest). I worked under two constraints that I thought made sense: First, I shouldn't hard-clip any values, and second, the tone mapping curve had to be applied uniformly to the entire photo (no local contrast enhancement or equalization!).
 
 First, I compute the .fits array's histograms (I use [AstroPy](https://www.astropy.org/) to load .fits files) and clip the top 0.2% and bottom 0.98% of the values. I histogram-equalize the resulting array (10,000 bins) and transform it by `f(x) = (x^4 + x^8 + x^16) / 3.0`. This essentially matches the photo's histogram to the ideal "space photo" histogram -- mostly dark, with some bright spots, and some REALLY bright spots. However, the equalization can sometimes introduce additional noise, and the power transformation can hide interesting darker parts of the image (like large gas clouds).
 
