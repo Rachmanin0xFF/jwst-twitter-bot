@@ -1,3 +1,9 @@
 mastDownload/**
 .vscode/**
 archive/**
+old_archive/**
+preview/**
+*.dat
+*.ini
+config.ini
+log.txt
