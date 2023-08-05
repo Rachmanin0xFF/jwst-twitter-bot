@@ -25,6 +25,8 @@ I've adapted this repo for (relatively) simple desktop use. Here are the instruc
 5. Run `image_previewer.py` from the command line. This script routinely checks the `data_queue` folder, turns the .npy/.txt pairs into pictures, and saves the pictures to a folder titled `preview`.
 6. Look at the pretty pictures in the `preview` folder!
 
+**Warning**: These scripts may download .fits image files exceeding 50Gb in size; make sure you have that much disk space available. Additionally, RAM usage is bound to be very high -- watch out!
+
 ## Basic Q & A
 
 ### Q: What is the JWST?
