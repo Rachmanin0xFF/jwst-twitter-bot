@@ -6,6 +6,7 @@
 # Core / IO
 import os
 import pathlib
+import configparser
 import pickle
 from time import strftime
 from time import gmtime
@@ -43,6 +44,21 @@ def load_set(path):
     except FileNotFoundError:
         return set()
 
+# Config
+
+config = configparser.ConfigParser()
+config.read(str(pathlib.Path(__file__).parent.resolve()) + '/config.ini')
+# Don't post images with titles exactly matching any of these
+INSTRUMENTS_TO_QUERY = config["queries"]["INSTRUMENTS_TO_QUERY"].split(",")
+IGNORE_TITLES = config["queries"]["IGNORE_TITLES_MATCHING"].split(",")
+IGNORE_TITLES_CONTAINING = config["queries"]["IGNORE_TITLES_CONTAINING"].split(",")
+ALWAYS_INCLUDE_TITLES_CONTAINING = config["queries"]["ALWAYS_INCLUDE_TITLES_CONTAINING"].split(",")
+ALWAYS_INCLUDE_TARGETS_CONTAINING = config["queries"]["ALWAYS_INCLUDE_TARGETS_CONTAINING"].split(",")
+BYPASS_FILTER = (config["queries"]["BYPASS_FILTER"].lower()=="true")
+
+lookback_amount=int(config["queries"]["days_to_look_back"])
+lookback_stepsize=int(config["queries"]["mast_query_length_in_days"])
+
 #============================ MAST Download ============================#
 
 # MAST data comes in bundles called "observations".
@@ -76,7 +92,7 @@ def get_JWST_products_from(start_time, end_time):
     print("Querying MAST from " + str(start_time) + " to " + str(end_time))
     log_print("Q " + str(start_time) + " " + str(end_time))
     obsByName = Observations.query_criteria(obs_collection="JWST",
-                                            instrument_name=["NIRCAM","MIRI"],
+                                            instrument_name=INSTRUMENTS_TO_QUERY,
                                             t_min=[start_time, end_time],
                                             calib_level=3,
                                             dataproduct_type="image")
@@ -196,29 +212,8 @@ class JWSTPhoto:
         self.path = str(pathlib.Path(__file__).parent.resolve()) + "/" + download(self.product)["Local Path"][0][2:]
     
     def is_interesting(self):
-        # Don't post images with titles exactly matching any of these
-        IGNORE_TITLES = ["MIRI Imager Photometric Zero Points and Stability (MIRI-011 / Program 1027)",
-                        "CAR-MIRI12-1028-PSF",
-                        "MIRI LRS Photometric Sensitivity and Stability",
-                        "MIRI Coronagraphic Contrast Ratios",
-                        "Coronagraphic Suppression Verification",
-                        "Absolute Flux Calibration (A Dwarfs)",
-                        "Absolute Flux Calibration (G Dwarfs)"]
-        # Don't post images with any of these strings contained in their titles
-        IGNORE_TITLES_CONTAINING = ["PSF Characterization",
-                                    "Astrometric Calibration",
-                                    "Photometric Zero Points and Stability",
-                                    "Count-rate Linearity Characterization",
-                                    "Imaging Filter Characterization",
-                                    "CAL-MIRI",
-                                    "Absolute Flux Calibration"]
-        ALWAYS_INCLUDE_TITLES_CONTAINING = ["Exoplanet"]
-        ALWAYS_INCLUDE_TARGETS_CONTAINING = ["NGC", "Mercury", "Venus", "Earth", "Mars", "Jupiter", "Saturn", "Uranus", "Neptune", "Juno",
-                                             "Moon", "Deimos", "Phobos", "Ceres", "Pallas", "Vesta", "Hygiea", "Io ", "Ganymede", "Callisto",
-                                             "Mimas", "Enceladus", "Tethys", "Dione", "Rhea", "Titan", "Hyperion", "Iapetus", "Phoebe",
-                                             "Miranda", "Ariel", "Umbriel", "Titania", "Oberon", "Proteus", "Triton", "Nereid", "Pluto",
-                                             "Charon", "90482 Orcus", "Vanth", "Twotinos", "Cubewanos", "Haumea", "Quaoar", "Eris", "Gonggong",
-                                             "Xiangliu"]
+        if BYPASS_FILTER:
+            return True
         interesting = True
         if (self.obs_title).lower() in [x.lower for x in IGNORE_TITLES]:
             interesting = False
@@ -278,6 +273,7 @@ def search_time_range(start_t, end_t):
     # Get products and filenames
     in_range = get_JWST_products_from(start_t, end_t)
     in_range_fnames = get_product_filenames(in_range)
+    print(in_range)
 
     # Put products into an array and sort
     to_process = []
@@ -299,10 +295,12 @@ def search_time_range(start_t, end_t):
             save_set(downloaded_images, "downloaded_images.dat")
 
 if __name__ == "__main__":
+    if not os.path.exists("./data_queue"):
+        os.makedirs("./data_queue")
     while True:
         ctime = Time.now().mjd
         # Loop forwards through time beginning 100d back
-        for i in range(100, -1, -1):
-            search_time_range(ctime - i*1.0 - 1.1, ctime - i*1.0)
+        for i in range(lookback_amount, -1, -lookback_stepsize):
+            search_time_range(ctime - (i + 1.05)*lookback_stepsize, ctime - i*lookback_stepsize)
             time.sleep(2.0)
         time.sleep(30.0*60.0)

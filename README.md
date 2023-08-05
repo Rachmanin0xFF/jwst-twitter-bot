@@ -2,7 +2,28 @@
 
 # JWST Photo Bot
 
-Hi! I am the [JWST Photo Bot](https://twitter.com/JWSTPhotoBot)! I automatically process and post images from the James Webb Space Telescope to Twitter!
+Hi! This is a script designed to automatically process and post images from the James Webb Space Telescope to Twitter. It was active at [JWST Photo Bot](https://twitter.com/JWSTPhotoBot), but it is currently on an indefinite hiatus due to operating expenses.
+
+## Update: Aug 5, 2023
+
+As many of its followers have noticed, this bot died back in March 2023. This happened for a couple reasons:
+1. I didn't have the funds to keep the bot running (it needs a lot of memory).
+2. The MAST database changed some of the formatting for querying the JWST, breaking the bot.
+3. I was moving + busy with other life things, so I didn't have time to update it.
+4. Twitter seemed like it was falling apart, and I wasn't sure I wanted to keep posting there.
+
+I apologize for not communicating more regarding the bot's absence. I'm not able to bring it back right now, but if someone else wants to host, I'd (probably) be happy to transfer ownership of the account.
+
+### Desktop Version
+
+I've adapted this repo for (relatively) simple desktop use. Here are the instructions:
+
+1. Install [Python 3](https://www.python.org/downloads/), [NumPy](https://numpy.org/install/), [AstroPy](https://docs.astropy.org/en/stable/install.html), and [Pillow](https://pypi.org/project/Pillow/).
+2. Clone this repository (or download the ZIP).
+3. Look through the `config.ini` file and mess with the settings (it's currently using the settings the bot had).
+4. Run `image_fetcher.py` from the command line. This script queries the MAST database and puts .npy image data and .txt metadata files into a folder named `data_queue`.
+5. Run `image_previewer.py` from the command line. This script routinely checks the `data_queue` folder, turns the .npy/.txt pairs into pictures, and saves the pictures to a folder titled `preview`.
+6. Look at the pretty pictures in the `preview` folder!
 
 ## Basic Q & A
 

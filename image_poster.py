@@ -22,7 +22,6 @@ PIL.Image.MAX_IMAGE_PIXELS = None
 
 # Scipy stack
 import numpy as np
-import scipy.stats
 
 #============================ I/O ============================#
 
@@ -257,9 +256,10 @@ def to_photo_BW(description, data, path, objid):
 
 if __name__ == "__main__":
     posted_images = load_set('posted_images.dat')
+    print("Waiting for photos...")
     while True:
         metadata = list(filter(lambda s : ".txt" in s, os.listdir('./data_queue')))
-        time.sleep(10) # Give the processor time to finish saving if we caught it in the middle of doing so
+        time.sleep(60*10) # Give the processor time to finish saving if we caught it in the middle of doing so
         for txt_path in metadata:
             print("Found new photo at " + txt_path + "!\nPosting...")
             with open("./data_queue/" + txt_path, 'r') as f:
@@ -284,3 +284,5 @@ if __name__ == "__main__":
                 os.remove(data_path)
 
             os.remove("./data_queue/" + txt_path)
+
+            # TODO: re-query the database to find actually posted objids

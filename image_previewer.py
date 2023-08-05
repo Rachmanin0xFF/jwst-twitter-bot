@@ -1,7 +1,4 @@
 
-# Twitter
-import tweepy
-
 # Core / IO
 import pathlib
 import configparser
@@ -21,7 +18,6 @@ PIL.Image.MAX_IMAGE_PIXELS = None
 
 # Scipy stack
 import numpy as np
-import scipy.stats
 
 #============================ Image Processing ============================#
 
@@ -195,20 +191,26 @@ def to_photo_BW(description, caption, data, path):
     return scaled_text_img_path
 
 if __name__ == "__main__":
-    metadata = list(filter(lambda s : ".txt" in s, os.listdir('./data_queue')))
-    for txt_path in metadata:
-        with open("./data_queue/" + txt_path, 'r') as f:
-            sections = f.read().split("~")
-            description = '\n'.join(sections[1].split("\n")[1:-1])
-            caption = '\n'.join(sections[2].split("\n")[1:])
-            objid = int(caption.split("\n")[-2].split(" ")[1])
-            print("---------------------")
-            print("OBJ ID: " + str(objid))
-            print("Caption: ")
-            print(caption)
-            print("Description: ")
-            print(description)
-            print("---------------------")
-            data_path = "./data_queue/" + ".".join(txt_path.split(".")[0:2]) + ".npy"
-            data = np.load(data_path)
-            output_path = to_photo_BW(description, caption, data, "./preview/" + ".".join(txt_path.split(".")[0:2]))
+    if not os.path.exists("./preview"):
+        os.makedirs("./preview")
+    while True:
+        metadata = list(filter(lambda s : ".txt" in s, os.listdir('./data_queue')))
+        for txt_path in metadata:
+            with open("./data_queue/" + txt_path, 'r') as f:
+                sections = f.read().split("~")
+                description = '\n'.join(sections[1].split("\n")[1:-1])
+                caption = '\n'.join(sections[2].split("\n")[1:])
+                objid = int(caption.split("\n")[-2].split(" ")[1])
+                print("---------------------")
+                print("OBJ ID: " + str(objid))
+                print("Caption: ")
+                print(caption)
+                print("Description: ")
+                print(description)
+                print("---------------------")
+                data_path = "./data_queue/" + ".".join(txt_path.split(".")[0:2]) + ".npy"
+                data = np.load(data_path)
+                output_path = to_photo_BW(description, caption, data, "./preview/" + ".".join(txt_path.split(".")[0:2]))
+            os.remove("./data_queue/" + txt_path)
+            os.remove(data_path)
+        time.sleep(1)
