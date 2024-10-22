@@ -6,7 +6,7 @@ Hi! This is a script designed to automatically process and post images from the 
 
 ## Update: Aug 5, 2023
 
-As many of its followers have noticed, this bot died back in March 2023. This happened for a couple reasons:
+As many of its followers have noticed, I sunset this bot back in March 2023. This happened for a couple reasons:
 1. I didn't have the funds to keep the bot running (it needs a lot of memory).
 2. The MAST database changed some of the formatting for querying the JWST, breaking the bot.
 3. I was moving + busy with other life things, so I didn't have time to update it.
@@ -30,13 +30,13 @@ I've adapted this repo for (relatively) simple desktop use. Here are the instruc
 ## Basic Q & A
 
 ### Q: What is the JWST?
-A: The James Webb Space Telescope (JWST) is a space telescope that was launched from the Earth in December 2022. It rests at a stable-ish point (the earth-sun L2) in space 5 times further away from Earth than the Moon.
+A: The James Webb Space Telescope (JWST) is a space telescope that was launched from the Earth in December 2022. It keeps itself at a special spot in space (the earth-sun L2, a saddle point) 5 times further away from Earth than the Moon.
 
 ### Q: Why are the photos in black and white?
 A: While most publicized images from the JWST are in full color, these color photos are always combinations of three or more separate black and white photos taken with different instruments (cameras) or filters. Right now this bot doesn't try to combine the black and white images into colored ones (though it might in the future). Also, color photos take up 3 times as much space as greyscale ones, so I'd have to to post them in lower quality, because Twitter does not let you upload photos that take up lots of memory.
 
 ### Q: Why does the bot post multiple copies of the same photo?
-A: Look carefully -- the photos are probably not the same! JWST takes photos in different wavelengths of light (wavelength bands, actually). Some subjects can look very similar in different wavelengths, others not so much. For example, a red class-M star will appear brighter in the red wavelength (650nm), while a blue class-O star might appear brighter in the will wavelength (470nm). If two photos look very similar, it just means that the distribution of light in each wavelength is very similar. The number in the "filter" section of each post roughly indicates the wavelength (in nanometers) of light that photo is looking at.
+A: Look carefully -- the photos are probably not the same! JWST takes photos in different wavelengths of light (wavelength bands, actually). Some subjects can look very similar in different wavelengths, others not so much. For example, a red class-M star will appear brighter in the red wavelength (650nm), while a blue class-O star might appear brighter in the blue wavelength (470nm). If two photos look very similar, it just means that the distribution of light in each band is very similar. The number in the "filter" section of each post roughly indicates the wavelength (in nanometers) of light that photo is looking at. For reference, the human eye can observe wavelengths between roughly 380 and 780 nanometers.
 
 ### Q: These photos look bad / noisy / overexposed!
 A: Typically, when you see images from JWST, Hubble, or any other space telescope, they have been carefully edited and fine-tuned **by hand**. JWST does not provide data in a format that can be immediately displayed on a computer monitor, and squishing it down to a computer screen without losing detail is a nontrivial task. The solution I use here is usually decent, but it has some flaws.
@@ -45,7 +45,7 @@ A: Typically, when you see images from JWST, Hubble, or any other space telescop
 A: The JWST was made to deepen our understanding of the universe, the pretty pictures are just a bonus. Also, the JWST has a lot of calibrations it needs to do to make sure its pictures are accurate. These calibrations constitute most of the "boring" photos. I've considered naively filtering out targets with "calibration" in the title. I may do this; it's a tough call to make.
 
 ### Q: What are NIRCAM and MIRI?
-A: Think of them as the JWST's different cameras. NIRCAM (Near InfraRed CAMera) captures wavelengths of light between 0.6 and 5 μm (micrometers), while MIRI (Mid InfraRed Instrument) captures longer wavelengths of light between 4.9 and 28.8 μm. The JWST has two other instruments (NIRISS and NIRSpec), but these are designed for spectroscopy, so photos made with their data are more confusing and less appealing to the public.
+A: Think of them as the JWST's different cameras. NIRCAM (Near InfraRed CAMera) captures wavelengths of light between 0.6 and 5 μm (micrometers), while MIRI (Mid InfraRed Instrument) captures longer wavelengths of light between 4.9 and 28.8 μm. The JWST has two other instruments (NIRISS and NIRSpec), but these are designed for spectroscopy, so photos made with their data are more confusing and less visually interesting at a glance.
 
 ### Q: Why did you make this?
 A: While JWST's data is publicly available, it is not really accessible to the *public*. It is very difficult for a layperson with no science or programming background to download and view data from the MAST database. I thought I'd try to bridge the gap and make it easier for the average person to see a fraction of the data JWST is sending back to Earth.
