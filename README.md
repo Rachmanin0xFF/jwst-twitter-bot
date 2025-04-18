@@ -4,6 +4,8 @@
 
 Hi! This is a script designed to automatically process and post images from the James Webb Space Telescope to Twitter. It was active at [JWST Photo Bot](https://twitter.com/JWSTPhotoBot), but it is currently on an indefinite hiatus due to operating expenses.
 
+**Update** April 18, 2025: [Yuval Harpaz](https://github.com/yuval-harpaz) has created [Astrobot JWST](https://bsky.app/profile/astrobotjwst.bsky.social) on BlueSky, carrying this project's spirit forward. Check it out!
+
 ## Update: Aug 5, 2023
 
 As many of its followers have noticed, I sunset this bot back in March 2023. This happened for a couple reasons:
